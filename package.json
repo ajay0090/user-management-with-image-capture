@@ -1,13 +1,18 @@
 {
   "name": "assignment-1",
   "version": "1.0.0",
-  "description": "",
+  "description": "User Management System with Image Capturing App",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npm run backend:start",
+    "dev": "npm run backend:dev",
+    "backend:start": "cd backend && npm start",
+    "backend:dev": "cd backend && npm run dev",
+    "frontend:start": "cd frontend && npm start",
+    "frontend:dev": "cd frontend && npm run dev"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs"
+  "keywords": ["user-management", "image-capturing", "angular", "nodejs"],
+  "author": "Ajay Tarole",
+  "license": "ISC"
 }
+
