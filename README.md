@@ -365,10 +365,6 @@ This project follows semantic commit messages:
 - Install PostgreSQL or add `C:\Program Files\PostgreSQL\<version>\bin` to PATH
 - Use `npm run db:migrate` instead of `psql` to create tables if you don't have `psql`
 
-## 📧 Support
-
-For issues or questions, please refer to the requirements document: `Robro-System-Assignment.pdf`
-
 ## 📄 License
 
 ISC
