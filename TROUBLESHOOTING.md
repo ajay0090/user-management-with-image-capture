@@ -250,16 +250,15 @@ if (file.size > 50 * 1024 * 1024) {
 
 **Fix:**
 ```bash
-# Run database setup script
-psql -U postgres -d robro_system -f DATABASE_SETUP.sql
-
-# Or verify tables manually
-psql -U postgres -d robro_system
-\dt
-
-# Create manually if needed
-CREATE TABLE users (id SERIAL...);
+# Run migrations to create tables
+cd backend
+npm run db:migrate
+npm run db:seed
 ```
+
+If `psql` is not available, do not worry; the migration commands work without it.
+
+If you still need the PostgreSQL CLI, install PostgreSQL client tools and add `psql` to your PATH.
 
 #### 2. Admin User Not Found
 **Error Message:** `Invalid credentials` even with admin/Admin@123

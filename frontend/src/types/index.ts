@@ -1,8 +1,11 @@
 export interface User {
   id: number;
+  username: string;
   email: string;
   role: string;
-  active: boolean;
+  roleId?: number;
+  isActive: boolean;
+  createdAt?: string;
 }
 
 export interface AuthResponse {
@@ -18,7 +21,14 @@ export interface ImageItem {
 }
 
 export interface CreateUserPayload {
+  username: string;
   email: string;
   password: string;
   role: string;
+}
+
+export interface RoleItem {
+  id: number;
+  name: string;
+  description: string;
 }

@@ -1,4 +1,5 @@
 const { User, Role } = require('../models');
+const { Op } = require('sequelize');
 const jwt = require('jsonwebtoken');
 
 // Generate JWT token
@@ -18,14 +19,20 @@ const generateToken = (user, role) => {
 // User Login
 exports.login = async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { username, email, password } = req.body;
+    const loginIdentifier = username || email;
 
-    if (!username || !password) {
-      return res.status(400).json({ message: 'Username and password required' });
+    if (!loginIdentifier || !password) {
+      return res.status(400).json({ message: 'Username/email and password required' });
     }
 
     const user = await User.findOne({
-      where: { username },
+      where: {
+        [Op.or]: [
+          { username: loginIdentifier },
+          { email: loginIdentifier },
+        ],
+      },
       include: [{ model: Role }],
     });
 
@@ -60,26 +67,40 @@ exports.login = async (req, res) => {
 // Admin: Create new user
 exports.createUser = async (req, res) => {
   try {
-    const { username, email, password, roleId } = req.body;
+    const { username, email, password, roleId, role } = req.body;
+    const normalizedUsername = username || (email ? email.split('@')[0] : null);
 
-    if (!username || !email || !password || !roleId) {
+    if (!normalizedUsername || !email || !password || (!roleId && !role)) {
       return res.status(400).json({ message: 'All fields are required' });
     }
 
-    // Check if user already exists
+    // Check if user already exists by username or email
     const existingUser = await User.findOne({
-      where: { username },
+      where: {
+        [Op.or]: [
+          { username: normalizedUsername },
+          { email },
+        ],
+      },
     });
 
     if (existingUser) {
       return res.status(400).json({ message: 'User already exists' });
     }
 
+    const roleRecord = roleId
+      ? await Role.findByPk(roleId)
+      : await Role.findOne({ where: { name: role } });
+
+    if (!roleRecord) {
+      return res.status(400).json({ message: 'Invalid role selected' });
+    }
+
     const user = await User.create({
-      username,
+      username: normalizedUsername,
       email,
       password,
-      roleId,
+      roleId: roleRecord.id,
     });
 
     res.status(201).json({
@@ -88,6 +109,7 @@ exports.createUser = async (req, res) => {
         id: user.id,
         username: user.username,
         email: user.email,
+        role: roleRecord.name,
         roleId: user.roleId,
       },
     });
@@ -112,13 +134,24 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
+// Admin: Get available role options
+exports.getRoles = async (req, res) => {
+  try {
+    const roles = await Role.findAll({ attributes: ['id', 'name', 'description'] });
+    res.json({ roles });
+  } catch (error) {
+    console.error('Get roles error:', error);
+    res.status(500).json({ message: 'Failed to fetch roles', error: error.message });
+  }
+};
+
 // Admin: Assign role to user
 exports.assignRole = async (req, res) => {
   try {
-    const { userId, roleId } = req.body;
+    const { userId, roleId, role } = req.body;
 
-    if (!userId || !roleId) {
-      return res.status(400).json({ message: 'User ID and Role ID required' });
+    if (!userId || (!roleId && !role)) {
+      return res.status(400).json({ message: 'User ID and Role ID or role name required' });
     }
 
     const user = await User.findByPk(userId);
@@ -127,12 +160,52 @@ exports.assignRole = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    await user.update({ roleId });
+    const roleRecord = roleId
+      ? await Role.findByPk(roleId)
+      : await Role.findOne({ where: { name: role } });
 
-    res.json({ message: 'Role assigned successfully', user });
+    if (!roleRecord) {
+      return res.status(400).json({ message: 'Invalid role selected' });
+    }
+
+    await user.update({ roleId: roleRecord.id });
+
+    res.json({
+      message: 'Role assigned successfully',
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        role: roleRecord.name,
+        roleId: roleRecord.id,
+      },
+    });
   } catch (error) {
     console.error('Assign role error:', error);
     res.status(500).json({ message: 'Failed to assign role', error: error.message });
+  }
+};
+
+// Admin: Delete user
+exports.deleteUser = async (req, res) => {
+  try {
+    const userId = parseInt(req.params.id, 10);
+
+    if (!userId) {
+      return res.status(400).json({ message: 'User ID required' });
+    }
+
+    const user = await User.findByPk(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    await user.destroy();
+    res.json({ message: 'User deleted successfully' });
+  } catch (error) {
+    console.error('Delete user error:', error);
+    res.status(500).json({ message: 'Failed to delete user', error: error.message });
   }
 };
 

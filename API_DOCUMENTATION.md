@@ -34,9 +34,19 @@ Response:
 ### 1. Login
 **Endpoint:** POST /auth/login
 **Authentication:** None required
-**Description:** User login with username and password
+**Description:** User login with email or username and password
 
 Request:
+```bash
+curl -X POST http://localhost:5000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "admin@robro.com",
+    "password": "Admin@123"
+  }'
+```
+
+Or using username:
 ```bash
 curl -X POST http://localhost:5000/api/auth/login \
   -H "Content-Type: application/json" \
@@ -126,7 +136,29 @@ Response:
 }
 ```
 
-### 4. Assign Role
+### 4. Get Roles
+**Endpoint:** GET /auth/roles
+**Authentication:** Required (Admin only)
+**Description:** Retrieve the available role options for user creation and assignment
+
+Request:
+```bash
+curl -X GET http://localhost:5000/api/auth/roles \
+  -H "Authorization: Bearer <token>"
+```
+
+Response:
+```json
+{
+  "roles": [
+    { "id": 1, "name": "Admin", "description": "Administrator with full access" },
+    { "id": 2, "name": "Supervisor", "description": "Supervisor with limited access" },
+    { "id": 3, "name": "Worker", "description": "Worker with basic access" }
+  ]
+}
+```
+
+### 5. Assign Role
 **Endpoint:** POST /auth/assign-role
 **Authentication:** Required (Admin only)
 **Description:** Change user role
@@ -174,6 +206,24 @@ Response:
 ```json
 {
   "message": "User deactivated successfully"
+}
+```
+
+### 6. Delete User
+**Endpoint:** DELETE /auth/users/:id
+**Authentication:** Required (Admin only)
+**Description:** Delete a user account from the system
+
+Request:
+```bash
+curl -X DELETE http://localhost:5000/api/auth/users/2 \
+  -H "Authorization: Bearer <token>"
+```
+
+Response:
+```json
+{
+  "message": "User deleted successfully"
 }
 ```
 

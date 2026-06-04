@@ -26,10 +26,10 @@ npm start
 ### Step 3: Frontend Setup (New Terminal)
 ```bash
 cd frontend
-npm install --legacy-peer-deps
+npm install
 npm start
 ```
-✅ Frontend should open on http://localhost:4200
+✅ Frontend should open on http://localhost:4173
 
 ## 🔑 Default Credentials
 ```
@@ -117,14 +117,15 @@ npm run dev           # Dev server with auto-open
 |------|---------|
 | `backend/.env` | Backend configuration |
 | `backend/server.js` | Express server entry point |
-| `frontend/src/main.ts` | Angular entry point |
+| `backend/package.json` | Backend scripts and dependencies |
+| `frontend/src/main.tsx` | React entry point |
 | `README.md` | Full documentation |
 
 ## ✅ Verification Checklist
 
 - [ ] PostgreSQL running
 - [ ] Backend server running (port 5000)
-- [ ] Frontend running (port 4200)
+- [ ] Frontend running (port 4173)
 - [ ] Can login with admin credentials
 - [ ] Can capture image
 - [ ] Can view image gallery

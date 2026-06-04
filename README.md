@@ -1,6 +1,6 @@
 # Robro System - User Management with Image Capturing App
 
-A full-stack web application built with Angular frontend and Node.js/Express backend for user management and image capturing.
+A full-stack web application built with React/Vite frontend and Node.js/Express backend for user management and image capturing.
 
 ## 📋 Features
 
@@ -42,11 +42,11 @@ A full-stack web application built with Angular frontend and Node.js/Express bac
 - **CORS**: Enabled for frontend communication
 
 ### Frontend
-- **Framework**: Angular (v21+)
+- **Framework**: React 18+ with Vite
 - **Language**: TypeScript
-- **HTTP Client**: Angular HttpClientModule
-- **Routing**: Angular Router
-- **Forms**: Reactive Forms & Template-driven Forms
+- **HTTP Client**: Axios
+- **Routing**: react-router-dom
+- **Forms**: React controlled forms
 
 ## 📁 Project Structure
 
@@ -73,23 +73,31 @@ Assignment-1/
 │   ├── .env
 │   └── package.json
 │
-├── frontend/
+├── frontend/                          # React/Vite Frontend
 │   ├── src/
-│   │   ├── app/
-│   │   │   ├── components/
-│   │   │   │   ├── login.component.ts
-│   │   │   │   └── dashboard.component.ts
-│   │   │   ├── services/
-│   │   │   │   ├── auth.service.ts
-│   │   │   │   ├── image.service.ts
-│   │   │   │   └── admin.service.ts
-│   │   │   ├── app.module.ts
-│   │   │   └── app.component.ts
-│   │   ├── main.ts
-│   │   ├── index.html
-│   │   └── styles.css
-│   ├── tsconfig.json
-│   └── package.json
+│   │   ├── components/
+│   │   │   └── ProtectedRoute.tsx         # Route protection component
+│   │   ├── pages/
+│   │   │   ├── LoginPage.tsx              # Login page
+│   │   │   └── DashboardPage.tsx          # Main dashboard
+│   │   ├── services/
+│   │   │   ├── api.ts                     # Axios API client
+│   │   │   ├── auth.ts                    # Auth API calls
+│   │   │   ├── image.ts                   # Image API calls
+│   │   │   └── admin.ts                   # Admin API calls
+│   │   ├── types/
+│   │   │   └── index.ts                   # Type definitions
+│   │   ├── App.tsx                        # Root app component
+│   │   ├── main.tsx                       # React bootstrap
+│   │   ├── index.html                     # HTML entry point
+│   │   ├── styles.css                     # Global styles
+│   │   ├── theme.ts                       # MUI theme configuration
+│   │   └── vite-env.d.ts                  # Vite type declarations
+│   ├── tsconfig.json                      # TypeScript config
+│   ├── tsconfig.node.json                 # Vite config typing
+│   ├── package.json                       # Frontend dependencies
+│   ├── .env.example                       # Frontend env template
+│   └── package-lock.json
 │
 ├── .gitignore
 ├── README.md
@@ -135,7 +143,13 @@ Assignment-1/
    CREATE DATABASE robro_system;
    ```
 
-5. **Start backend server**
+5. **Run database migrations**
+   ```bash
+   npm run db:migrate
+   npm run db:seed
+   ```
+
+6. **Start backend server**
    ```bash
    npm start
    ```
@@ -150,14 +164,14 @@ Assignment-1/
 
 2. **Install dependencies**
    ```bash
-   npm install --legacy-peer-deps
+   npm install
    ```
 
 3. **Start development server**
    ```bash
    npm start
    ```
-   Application runs on: `http://localhost:4200`
+   Application runs on: `http://localhost:4173`
 
 ## 📡 API Endpoints
 
@@ -344,7 +358,12 @@ This project follows semantic commit messages:
 
 ### Port Already in Use
 - Change PORT in `.env` (backend)
-- Use different Angular port: `ng serve --port 4201`
+- Use a different Vite port: `npm start -- --port 4174`
+
+### PostgreSQL CLI Not Found
+- If `psql` is not recognized, PostgreSQL client tools are not on your PATH
+- Install PostgreSQL or add `C:\Program Files\PostgreSQL\<version>\bin` to PATH
+- Use `npm run db:migrate` instead of `psql` to create tables if you don't have `psql`
 
 ## 📧 Support
 

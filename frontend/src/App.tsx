@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
+import UserManagementPage from './pages/UserManagementPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import { User } from './types';
 import { createTheme, ThemeProvider } from '@mui/material/styles';

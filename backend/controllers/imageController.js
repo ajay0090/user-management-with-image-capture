@@ -26,7 +26,8 @@ exports.uploadImage = async (req, res) => {
       image: {
         id: image.id,
         filename: image.filename,
-        uploadedAt: image.createdAt,
+        description: image.description,
+        createdAt: image.createdAt,
       },
     });
   } catch (error) {
